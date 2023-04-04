@@ -7,41 +7,54 @@ function CardList() {
     const [tours, setTours] = useState(dataList);
 
     const removeTour = (id) => {
-        setTours((prevTours) => {
-          return prevTours.filter((tour) => tour.id !== id);
+        const newTours = tours.filter((tour) => tour.id !== id);
+        setTours(newTours);
+    };
+
+    const toggleSummary = (id) => {
+        const newTours = tours.map((tour) => {
+            if (tour.id === id) {
+                return {
+                    ...tour,
+                    isSummaryShown: !tour.isSummaryShown,
+                };
+            } else {
+                return tour;
+            }
         });
-      };
-      
+        setTours(newTours);
+    };
+
+    if (tours.length === 0) {
+        return (
+            <main>
+                <section>
+                    <div className="title">
+                        <h2>no tours left</h2>
+                        <button className="btn" onClick={() => setTours(dataList)}>
+                            refresh
+                        </button>
+                    </div>
+                </section>
+            </main>
+        );
+    }
 
     return (
-        <>
-            {tours.length === 0 ? (
-                <main>
-                    <section>
-                        <div className="title">
-                            <h2>no tours left</h2>
-                            <button className="btn" onClick={() => setTours(dataList)}>
-                                refresh
-                            </button>
-                        </div>
-                    </section>
-                </main>
-            ) : (
-                <main>
-                    <section>
-                        <div className="title">
-                            <h2>our tours</h2>
-                            <div className="underline"></div>
-                        </div>
-                        <div className="tours">
-                            {tours.map((tour) => (
-                                <Card key={tour.id} tour={tour} removeTour={removeTour} />
-                            ))}
-                        </div>
-                    </section>
-                </main>
-            )}
-        </>
+        <main>
+            <section>
+                <div className="title">
+                    <h2>our tours</h2>
+                    <div className="underline"></div>
+                </div>
+                <div className="tours">
+                    {tours.map((tour) => (
+                        <Card key={tour.id} tour={tour} removeTour={removeTour} toggleSummary={toggleSummary} />
+                    ))}
+                </div>
+
+            </section>
+        </main>
     );
 }
 
